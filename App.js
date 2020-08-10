@@ -26,6 +26,8 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import database from '@react-native-firebase/database';
+import firestore from '@react-native-firebase/firestore';
+import {getUsers} from './oas_api'
 
 const reference = database().ref();
 
@@ -41,19 +43,23 @@ class App extends Component {
 
 
   componentDidMount() {
-    reference
-      .child('users/')
-      .once('value')
-      .then((snapshot) => {
-        console.log('User data: ', snapshot.val());
+    getUsers();
+  //   const usersCollection = firestore().collection('users');
+  //   const users = usersCollection.get();
+  // console.log(users);
+    // reference
+    //   .child('users/')
+    //   .once('value')
+    //   .then((snapshot) => {
+    //     console.log('User data: ', snapshot.val());
 
-        snapshot.forEach((childSub) => {
-          let key = childSub.key;
-          let v = childSub.val();
-          console.log(v);
-          console.log(v['name']);
-        });
-      });
+    //     snapshot.forEach((childSub) => {
+    //       let key = childSub.key;
+    //       let v = childSub.val();
+    //       console.log(v);
+    //       console.log(v['name']);
+    //     });
+    //   });
   }
 
   render() {
