@@ -7,6 +7,5 @@ export async function getUsers(){
     .get();
     users.forEach((doc) => {
         console.log(doc.data());
-
     })
 }

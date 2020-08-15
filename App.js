@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Appbar, TextInput, Button} from 'react-native-paper';
+import {Appbar, TextInput, Button, Avatar} from 'react-native-paper';
 import {
   SafeAreaView,
   StyleSheet,
@@ -30,11 +30,11 @@ import {
 import database from '@react-native-firebase/database';
 import firestore from '@react-native-firebase/firestore';
 import {getUsers} from './oas_api';
+import {ListItem} from 'react-native-elements';
 
 const reference = database().ref();
 
 class App extends Component {
-  
   state = {
     userList: [],
     isLoaded: false,
@@ -45,11 +45,12 @@ class App extends Component {
     const users = await firestore().collection('users').get();
     users.forEach((doc) => {
       console.log(doc.data());
-      const {github, name} = doc.data();
+      const {github, name, img} = doc.data();
       list.push({
         id: doc.id,
         github,
         name,
+        img,
       });
     });
     this.setState({
@@ -59,39 +60,68 @@ class App extends Component {
   componentDidMount() {
     this.fetchUsers().then(() => {
       this.setState({
-        isLoaded: true
+        isLoaded: true,
       });
     });
   }
   render() {
-    
     return (
       <>
         <Appbar>
           <Appbar.Content title={'온라인 알고리즘 스터디'} />
         </Appbar>
         {/* <StatusBar barStyle="dark-content" /> */}
-        {this.state.isLoaded ? ( <FlatList
-          style={{flex: 1}}
-          data={this.state.userList}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-          <Text>{item.name}</Text>
-          )}
-        />) : (
-          <View >
-            <ActivityIndicator/>
-          <Text >Getting the Users</Text>
-          {/* {errors ? <Text>{errors}</Text> : null} */}
-        </View>
+    <Text style={styles.title}>{`${this.state.userList.length}명이 함께 참여중입니다.`}</Text>
+        {this.state.isLoaded ? (
+          <FlatList
+            style={{flex: 1}}
+            data={this.state.userList}
+            keyExtractor={(item) => item.id}
+            renderItem={({item}) => (
+              <ListItem
+              onPress={() => {
+                console.log(item.name);
+              }}
+                title={item.name}
+                subtitle={item.github}
+                leftAvatar={{
+                  placeholderStyle : {
+                    backgroundColor: 'grey'
+                  },
+                  rounded: true,
+                  title: item.name[0],
+                  source: {uri: item.img},
+                  activeOpacity :0.7
+                }}></ListItem>
+            )}
+          />
+        ) : (
+          <View style={[styles.container,  styles.horizontal]}>
+            <ActivityIndicator size="large" />
+            <Text>Getting the Users</Text>
+            {/* {errors ? <Text>{errors}</Text> : null} */}
+          </View>
         )}
-       
       </>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  horizontal: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    padding: 10
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  title:{
+    padding: 16,
+    fontSize: 20,
+  },
+  
   scrollView: {
     backgroundColor: Colors.lighter,
   },
