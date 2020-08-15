@@ -6,8 +6,6 @@ export async function getUsers(){
     .collection('users')
     .get();
     users.forEach((doc) => {
-        
-        console.log(doc);
-        
+        console.log(doc.data());
     })
 }

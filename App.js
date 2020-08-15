@@ -135,6 +135,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 
+=======
+    flexDirection: "column",
+    justifyContent: "space-around",
+    padding: 10
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  title:{
+    padding: 16,
+    fontSize: 20,
+  },
+  
+>>>>>>> d63b844cf3fd004291035afcc69cece9b1a91f18
   scrollView: {
     backgroundColor: Colors.lighter,
   },
